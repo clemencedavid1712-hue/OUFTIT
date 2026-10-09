@@ -186,7 +186,7 @@
   CLOTHES.forEach(function (c) { c.img = 'item-' + c.id + '.jpg'; });
 
   var KEY = 'ouftit_v1';
-  var state = { favs: [], wardrobe: [], looks: [], saved: [], wish: [] };
+  var state = { favs: [], wardrobe: [], looks: [], saved: [], wish: [], caps: [] };
   var ui = { occ: 'Toutes', sea: 'Toutes', cat: 'Toutes', src: 'Toutes', gocc: 'Toutes', gsea: 'Toutes', kind: 'Toutes', shopq: '', gen: null, locks: {}, pick: [], spot: null, confirm: null };
 
   function load() {
@@ -199,6 +199,7 @@
         state.looks = d.looks || [];
         state.saved = d.saved || [];
 state.wish = d.wish || [];
+state.caps = d.caps || [];
       }
     } catch (e) {}
   }
@@ -553,6 +554,21 @@ var SITES = [
 { n: 'Google Shopping', k: 'Comparer', u: 'https://www.google.com/search?tbm=shop&q=' },
 { n: 'Pinterest', k: 'Comparer', u: 'https://www.pinterest.fr/search/pins/?q=' }
 ];
+
+var INSPIRE = [
+{ id: 'c11', t: 'Top bandeau orange et pantalon blanc', img: 'tenue-11.jpg', q: ['top bandeau bouffant orange', 'pantalon large blanc fluide', 'bracelet doré'] },
+{ id: 'c12', t: 'Pull jaune pâle et jean foncé', img: 'tenue-12.jpg', q: ['pull court maille jaune pâle', 'jean large foncé', 'collier long cœur doré'] },
+{ id: 'c10', t: 'Haut noir à manches dentelle', img: 'tenue-10.jpg', q: ['haut noir manches dentelle', 'jean brut foncé taille haute', 'collier cœur doré'] },
+{ id: 'c6', t: 'Haut noir et short à pois', img: 'tenue-6.jpg', q: ['haut noir col montant dos nu', 'short taille haute à pois', 'collier long doré'] }
+];
+function capCard(c, mine) {
+var armed = ui.confirm === c.id;
+return '<article class="idea outfit"><div class="outfit-photo"><img src="' + c.img + '" alt="' + esc(c.t) + '" loading="lazy"></div><div class="idea-body">' +
+'<div class="idea-top"><h3>' + esc(c.t) + '</h3></div>' +
+'<div class="chips">' + c.q.map(function (q) { return '<button type="button" class="chip" data-sidea="' + esc(q) + '" aria-pressed="false">' + esc(q) + '</button>'; }).join('') + '</div>' +
+(mine ? '<div style="margin-top:.7rem"><button class="btn small' + (armed ? ' danger' : '') + '" type="button" data-delcap="' + c.id + '">' + (armed ? 'Confirmer' : 'Supprimer') + '</button></div>' : '') +
+'</div></article>';
+}
 var SIZES = ['Taille (optionnel)', 'XS', 'S', 'M', 'L', 'XL', '34', '36', '38', '40', '42', '36 chaussures', '37 chaussures', '38 chaussures', '39 chaussures'];
 var SHOP_IDEAS = ['baskets blanches femme', 'mocassins noirs femme', 'bottines noires', 'sandales plates', 'jean droit bleu', 'pull maille écru', 'robe noire courte', 'veste en cuir noire', 'trench beige', 'pantalon de tailleur', 'short à pois taille haute', 'haut noir manches dentelle', 'top bandeau orange', 'pull jaune pâle femme', 'pantalon blanc fluide', 'collier long doré', 'sac bandoulière noir'];
 function shopQuery() {
@@ -577,6 +593,7 @@ chips($('shop-kind'), ['Seconde main', 'Neuf', 'Comparer'], ui.kind, 'kind');
 if (!$('shop-size').options.length) $('shop-size').innerHTML = SIZES.map(function (s) { return '<option>' + esc(s) + '</option>'; }).join('');
 $('shop-ideas').innerHTML = SHOP_IDEAS.map(function (s) { return '<button type="button" class="chip" data-sidea="' + esc(s) + '" aria-pressed="false">' + esc(s) + '</button>'; }).join('');
 renderShopLinks(ui.shopq);
+$('shop-caps').innerHTML = INSPIRE.map(function (c) { return capCard(c, false); }).join('') + state.caps.map(function (c) { return capCard(c, true); }).join('');
 $('shop-wishes').innerHTML = state.wish.length
 ? state.wish.map(function (w) {
 var armed = ui.confirm === 'w' + w.id;
@@ -603,6 +620,14 @@ ui.shopq = q; renderShop();
 document.addEventListener('click', function (e) {
 var i = e.target.closest('[data-sidea]');
 if (i) { $('shop-q').value = i.getAttribute('data-sidea'); ui.shopq = shopQuery(); renderShopLinks(ui.shopq); $('shop-links').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); return; }
+var dc = e.target.closest('[data-delcap]');
+if (dc) {
+var cid = dc.getAttribute('data-delcap');
+if (ui.confirm !== cid) { ui.confirm = cid; renderShop(); return; }
+ui.confirm = null;
+state.caps = state.caps.filter(function (x) { return x.id !== cid; });
+save(); renderShop(); return;
+}
 var d = e.target.closest('[data-delwish]');
 if (d) {
 var id = d.getAttribute('data-delwish');
@@ -611,6 +636,22 @@ ui.confirm = null;
 state.wish = state.wish.filter(function (w) { return w.id !== id; });
 save(); renderShop();
 }
+});
+
+$('cap-form').addEventListener('submit', function (e) {
+e.preventDefault();
+var files = Array.prototype.slice.call($('cap-file').files);
+if (!files.length) { toast('Choisis au moins une capture.'); return; }
+var name = $('cap-name').value.trim() || 'Capture';
+var q = $('cap-pieces').value.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+if (!q.length) q = [name];
+Promise.all(files.map(shrink)).then(function (imgs) {
+imgs.forEach(function (img, i) {
+state.caps.unshift({ id: 'k' + Date.now() + '_' + i, t: imgs.length > 1 ? name + ' ' + (i + 1) : name, img: img, q: q });
+});
+if (save()) { $('cap-form').reset(); toast('Capture ajoutée.'); } else { state.caps.splice(0, imgs.length); }
+renderShop();
+}).catch(function () { toast('Cette capture n\'a pas pu être lue.'); });
 });
 
 /* ---------- Looks ---------- */

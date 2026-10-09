@@ -177,6 +177,19 @@
     <h3 class="subhead">Idées de recherche</h3>
     <p class="hint" style="margin-bottom:.6rem">Des pièces qui manquent à ta garde-robe ou vues dans tes inspirations. Touche-en une pour la chercher.</p>
     <div class="chips" id="shop-ideas"></div>
+    <h3 class="subhead">Mes captures d'inspiration</h3>
+    <p class="hint" style="margin-bottom:.6rem">Tes captures TikTok et Snap. Touche une pièce pour la chercher en ligne.</p>
+    <div class="ideas" id="shop-caps"></div>
+    <form class="add-form" id="cap-form" style="margin-top:1rem">
+      <h3>Ajouter une capture</h3>
+      <div class="row">
+        <input type="text" id="cap-name" placeholder="Titre (ex. Robe vue sur TikTok)" maxlength="60" aria-label="Titre">
+        <input type="text" id="cap-pieces" placeholder="Pièces à chercher, séparées par des virgules" maxlength="160" aria-label="Pièces à chercher">
+      </div>
+      <input type="file" id="cap-file" accept="image/*" multiple aria-label="Captures">
+      <p class="hint">Tu peux choisir plusieurs captures. Elles restent sur cet appareil.</p>
+      <div><button class="btn primary" type="submit">Ajouter la capture</button></div>
+    </form>
     <h3 class="subhead">Mes envies</h3>
     <div class="looks" id="shop-wishes"></div>
   </section>
