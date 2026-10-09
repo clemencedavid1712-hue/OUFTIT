@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ouftit</title>
+<meta name="description" content="Mes idées de tenues, ma garde-robe et mes looks.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Mrs+Saint+Delafield&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="flower" viewBox="0 0 100 100">
+      <g>
+        <ellipse cx="50" cy="24" rx="12" ry="22"/>
+        <ellipse cx="50" cy="24" rx="12" ry="22" transform="rotate(45 50 50)"/>
+        <ellipse cx="50" cy="24" rx="12" ry="22" transform="rotate(90 50 50)"/>
+        <ellipse cx="50" cy="24" rx="12" ry="22" transform="rotate(135 50 50)"/>
+        <ellipse cx="50" cy="24" rx="12" ry="22" transform="rotate(180 50 50)"/>
+        <ellipse cx="50" cy="24" rx="12" ry="22" transform="rotate(225 50 50)"/>
+        <ellipse cx="50" cy="24" rx="12" ry="22" transform="rotate(270 50 50)"/>
+        <ellipse cx="50" cy="24" rx="12" ry="22" transform="rotate(315 50 50)"/>
+        <circle cx="50" cy="50" r="12"/>
+      </g>
+    </symbol>
+    <symbol id="star" viewBox="0 0 100 100">
+      <path d="M50 8V92M14 29L86 71M14 71L86 29"/>
+    </symbol>
+    <symbol id="sunface" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="19"/>
+      <path d="M50 6V20M50 80V94M6 50H20M80 50H94M19 19L29 29M71 71L81 81M19 81L29 71M71 29L81 19"/>
+      <path d="M43 52q7 7 14 0" stroke-width="2.5"/>
+      <path d="M44 44v1M56 44v1" stroke-width="3.5"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="page">
+<div class="wrap">
+
+  <span class="deco" style="left:-34px;top:150px;width:90px;height:90px" aria-hidden="true"><svg class="d-star" viewBox="0 0 100 100"><use href="#star"/></svg></span>
+  <span class="deco" style="right:-60px;top:720px;width:150px;height:150px" aria-hidden="true"><svg class="d-flower-pink" viewBox="0 0 100 100"><use href="#flower"/></svg></span>
+  <span class="deco" style="left:-52px;top:1180px;width:120px;height:120px" aria-hidden="true"><svg class="d-flower-orange" viewBox="0 0 100 100"><use href="#flower"/></svg></span>
+
+  <header class="topbar">
+    <div class="logo">Ouftit</div>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button class="tab" role="tab" id="t-ideas" aria-controls="p-ideas" aria-selected="true" data-tab="ideas">Idées</button>
+      <button class="tab" role="tab" id="t-generator" aria-controls="p-generator" aria-selected="false" data-tab="generator">Générateur</button>
+    <button class="tab" role="tab" id="t-outfits" aria-controls="p-outfits" aria-selected="false" data-tab="outfits">Mes tenues</button>
+    <button class="tab" role="tab" id="t-wardrobe" aria-controls="p-wardrobe" aria-selected="false" data-tab="wardrobe">Ma garde-robe</button>
+      <button class="tab" role="tab" id="t-looks" aria-controls="p-looks" aria-selected="false" data-tab="looks">Mes looks</button>
+      <button class="tab" role="tab" id="t-favs" aria-controls="p-favs" aria-selected="false" data-tab="favs">Favoris</button>
+    </nav>
+    <button class="btn primary js-surprise" type="button">Me surprendre
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M4 7.500l16 9M4 16.500l16-9"/></svg>
+    </button>
+  </header>
+
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <h1 id="hero-title">Idées<br>de tenues</h1>
+      <span class="script" aria-hidden="true">qui me ressemblent</span>
+      <p>Ouftit rassemble des idées de looks pour chaque occasion, ta garde-robe en photos et les tenues que tu composes. Tout au même endroit.</p>
+      <div class="hero-actions">
+        <button class="btn primary" type="button" data-go="ideas">Voir les idées
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <button class="btn" type="button" data-go="generator">Générer une tenue</button>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="arch"></div>
+      <div class="orb"></div>
+      <div class="hero-photo" id="hero-photo" hidden></div>
+      <div class="hero-flower"><svg viewBox="0 0 100 100"><use href="#flower"/></svg></div>
+      <div class="badge">Créé<br>pour<br>toi</div>
+    </div>
+  </section>
+
+  <section class="numbers" aria-labelledby="num-title">
+    <div class="kicker" id="num-title">Ouftit en chiffres</div>
+    <div class="tiles">
+      <div class="tile"><span class="num" id="stat-ideas">0</span><span class="label">Idées de tenues</span></div>
+      <div class="tile"><span class="num" id="stat-pieces">0</span><span class="label">Pièces en garde-robe</span></div>
+      <div class="tile"><span class="num" id="stat-looks">0</span><span class="label">Looks composés</span></div>
+      <div class="tile"><span class="num" id="stat-favs">0</span><span class="label">Favoris</span></div>
+    </div>
+  </section>
+
+  <div id="panels"></div>
+
+  <!-- IDÉES -->
+  <section class="panel board" id="p-ideas" role="tabpanel" aria-labelledby="t-ideas">
+    <div class="board-head">
+      <div>
+        <h2 class="section-title">Sélection d'idées</h2>
+        <p class="sub">Filtre par occasion et par saison, puis garde celles que tu aimes avec le cœur.</p>
+      </div>
+      <button class="btn primary js-surprise" type="button">Me surprendre</button>
+    </div>
+    <div class="filters">
+      <div class="chips" id="f-occ" aria-label="Occasion"></div>
+      <div class="chips" id="f-sea" aria-label="Saison"></div>
+    </div>
+    <div id="spotlight"></div>
+    <div class="ideas" id="ideas"></div>
+  </section>
+
+  <!-- GÉNÉRATEUR -->
+  <section class="panel" id="p-generator" role="tabpanel" aria-labelledby="t-generator" hidden>
+    <h2 class="section-title">Générateur de tenues</h2>
+    <p class="sub">Il mélange les vêtements repérés sur tes photos et ceux que tu ajoutes dans ta garde-robe. Touche un cadenas pour garder une pièce et refaire le reste.</p>
+    <div class="stage">
+      <div class="filters">
+        <div class="chips" id="g-occ" aria-label="Occasion"></div>
+        <div class="chips" id="g-sea" aria-label="Saison"></div>
+      </div>
+      <div class="gen-grid" id="gen-result"></div>
+      <p class="gen-status" id="gen-status" aria-live="polite"></p>
+      <div class="actions">
+        <button class="btn primary js-gen" type="button">Générer une tenue</button>
+        <button class="btn pink" id="btn-save-gen" type="button">Garder cette tenue</button>
+      </div>
+    </div>
+    <h3 class="subhead">Tenues gardées</h3>
+    <div class="looks" id="gen-saved"></div>
+  </section>
+
+  <!-- MES TENUES -->
+  <section class="panel" id="p-outfits" role="tabpanel" aria-labelledby="t-outfits" hidden>
+    <h2 class="section-title">Mes tenues</h2>
+    <p class="sub">Tes looks en photo, avec les pièces et une idée pour les renouveler. Touche le cœur pour les garder.</p>
+    <div class="chips" id="f-src" style="margin-bottom:1rem" aria-label="Filtrer"></div>
+    <div class="ideas" id="outfits"></div>
+  </section>
+
+  <!-- GARDE-ROBE -->
+  <section class="panel" id="p-wardrobe" role="tabpanel" aria-labelledby="t-wardrobe" hidden>
+    <h2 class="section-title">Ma garde-robe</h2>
+    <p class="sub">Ajoute les photos de tes vêtements ou de tes tenues. Elles restent sur cet appareil.</p>
+    <form class="add-form" id="add-form">
+      <h3>Ajouter une pièce</h3>
+      <div class="row">
+        <input type="text" id="piece-name" placeholder="Nom (ex. Veste en jean)" maxlength="60" aria-label="Nom de la pièce">
+        <select id="piece-cat" aria-label="Catégorie"></select>
+      </div>
+      <input type="file" id="piece-file" accept="image/*" multiple aria-label="Photos">
+      <p class="hint">Tu peux choisir plusieurs photos d'un coup. Elles sont réduites automatiquement.</p>
+      <div><button class="btn primary" type="submit">Ajouter à ma garde-robe</button></div>
+    </form>
+    <div class="chips" id="f-cat" style="margin-bottom:1rem" aria-label="Filtrer par catégorie"></div>
+    <div id="wardrobe"></div>
+  </section>
+
+  <!-- LOOKS -->
+  <section class="panel" id="p-looks" role="tabpanel" aria-labelledby="t-looks" hidden>
+    <h2 class="section-title">Mes looks</h2>
+    <p class="sub">Compose une tenue en touchant les pièces de ta garde-robe.</p>
+    <form class="add-form" id="look-form">
+      <h3>Nouveau look</h3>
+      <div class="row">
+        <input type="text" id="look-name" placeholder="Nom du look (ex. Salon étudiant)" maxlength="60" aria-label="Nom du look">
+        <select id="look-occ" aria-label="Occasion"></select>
+      </div>
+      <div id="look-picker"></div>
+      <div><button class="btn primary" type="submit">Enregistrer le look</button></div>
+    </form>
+    <div class="looks" id="looks"></div>
+  </section>
+
+  <!-- FAVORIS -->
+  <section class="panel" id="p-favs" role="tabpanel" aria-labelledby="t-favs" hidden>
+    <h2 class="section-title">Mes favoris</h2>
+    <p class="sub">Les idées que tu as gardées.</p>
+    <div class="ideas" id="favs"></div>
+  </section>
+
+  <section class="cta">
+    <div>
+      <h2>On s'habille ?</h2>
+      <span class="script" aria-hidden="true">avec style</span>
+      <button class="btn primary js-surprise" type="button">Me surprendre</button>
+    </div>
+    <div class="sun" aria-hidden="true"><svg viewBox="0 0 100 100"><use href="#sunface"/></svg></div>
+  </section>
+
+  <footer class="footer">
+    <p>Les photos et les looks sont enregistrés dans ton navigateur, sur cet appareil uniquement.</p>
+  </footer>
+</div>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>
