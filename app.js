@@ -186,8 +186,8 @@
   CLOTHES.forEach(function (c) { c.img = 'item-' + c.id + '.jpg'; });
 
   var KEY = 'ouftit_v1';
-  var state = { favs: [], wardrobe: [], looks: [], saved: [] };
-  var ui = { occ: 'Toutes', sea: 'Toutes', cat: 'Toutes', src: 'Toutes', gocc: 'Toutes', gsea: 'Toutes', gen: null, locks: {}, pick: [], spot: null, confirm: null };
+  var state = { favs: [], wardrobe: [], looks: [], saved: [], wish: [] };
+  var ui = { occ: 'Toutes', sea: 'Toutes', cat: 'Toutes', src: 'Toutes', gocc: 'Toutes', gsea: 'Toutes', kind: 'Toutes', shopq: '', gen: null, locks: {}, pick: [], spot: null, confirm: null };
 
   function load() {
     try {
@@ -198,6 +198,7 @@
         state.wardrobe = d.wardrobe || [];
         state.looks = d.looks || [];
         state.saved = d.saved || [];
+state.wish = d.wish || [];
       }
     } catch (e) {}
   }
@@ -222,7 +223,7 @@
 
   /* ---------- Onglets ---------- */
   function showTab(name, scroll) {
-    ['ideas', 'generator', 'outfits', 'wardrobe', 'looks', 'favs'].forEach(function (n) {
+    ['ideas', 'generator', 'outfits', 'wardrobe', 'shop', 'looks', 'favs'].forEach(function (n) {
       var on = n === name;
       $('p-' + n).hidden = !on;
       $('t-' + n).setAttribute('aria-selected', on ? 'true' : 'false');
@@ -248,7 +249,7 @@
   }
   document.addEventListener('click', function (e) {
     var c = e.target.closest('.chip');
-    if (!c) return;
+    if (!c || !c.hasAttribute('data-k')) return;
     ui[c.getAttribute('data-k')] = c.getAttribute('data-v');
     ui.spot = null;
     if (c.getAttribute('data-k').charAt(0) === 'g') { ui.gen = null; ui.locks = {}; }
@@ -539,7 +540,80 @@
     }).catch(function () { toast('Cette photo n\'a pas pu être lue.'); });
   });
 
-  /* ---------- Looks ---------- */
+  
+/* ---------- Shopping ---------- */
+var SITES = [
+{ n: 'Vinted', k: 'Seconde main', u: 'https://www.vinted.fr/catalog?search_text=' },
+{ n: 'Vestiaire Collective', k: 'Seconde main', u: 'https://fr.vestiairecollective.com/search/?q=' },
+{ n: 'Depop', k: 'Seconde main', u: 'https://www.depop.com/fr/search/?q=' },
+{ n: 'Zalando', k: 'Neuf', u: 'https://www.zalando.fr/catalogue/?q=' },
+{ n: 'Zara', k: 'Neuf', u: 'https://www.zara.com/fr/fr/search?searchTerm=' },
+{ n: 'H&M', k: 'Neuf', u: 'https://www2.hm.com/fr_fr/search-results.html?q=' },
+{ n: 'Shein', k: 'Neuf', u: 'https://fr.shein.com/pdsearch/' },
+{ n: 'Google Shopping', k: 'Comparer', u: 'https://www.google.com/search?tbm=shop&q=' },
+{ n: 'Pinterest', k: 'Comparer', u: 'https://www.pinterest.fr/search/pins/?q=' }
+];
+var SIZES = ['Taille (optionnel)', 'XS', 'S', 'M', 'L', 'XL', '34', '36', '38', '40', '42', '36 chaussures', '37 chaussures', '38 chaussures', '39 chaussures'];
+var SHOP_IDEAS = ['baskets blanches femme', 'mocassins noirs femme', 'bottines noires', 'sandales plates', 'jean droit bleu', 'pull maille écru', 'robe noire courte', 'veste en cuir noire', 'trench beige', 'pantalon de tailleur', 'short à pois taille haute', 'haut noir manches dentelle', 'top bandeau orange', 'pull jaune pâle femme', 'pantalon blanc fluide', 'collier long doré', 'sac bandoulière noir'];
+function shopQuery() {
+var q = $('shop-q').value.trim(), s = $('shop-size').value;
+if (q && $('shop-size').selectedIndex > 0) q += ' ' + s.replace(' chaussures', '');
+return q;
+}
+function shopUrl(site, q) {
+var e = encodeURIComponent(q);
+return site.n === 'Shein' ? site.u + e + '.html' : site.u + e;
+}
+function renderShopLinks(q) {
+var el = $('shop-links');
+if (!q) { el.innerHTML = ''; return; }
+var list = SITES.filter(function (s) { return ui.kind === 'Toutes' || s.k === ui.kind; });
+el.innerHTML = '<p class="shopq">Recherche : <b>' + esc(q) + '</b></p><div class="shoplinks">' + list.map(function (s) {
+return '<a class="shoplink" href="' + esc(shopUrl(s, q)) + '" target="_blank" rel="noopener noreferrer"><strong>' + esc(s.n) + '</strong><span>' + esc(s.k) + ' · ouvre le site</span></a>';
+}).join('') + '</div>';
+}
+function renderShop() {
+chips($('shop-kind'), ['Seconde main', 'Neuf', 'Comparer'], ui.kind, 'kind');
+if (!$('shop-size').options.length) $('shop-size').innerHTML = SIZES.map(function (s) { return '<option>' + esc(s) + '</option>'; }).join('');
+$('shop-ideas').innerHTML = SHOP_IDEAS.map(function (s) { return '<button type="button" class="chip" data-sidea="' + esc(s) + '" aria-pressed="false">' + esc(s) + '</button>'; }).join('');
+renderShopLinks(ui.shopq);
+$('shop-wishes').innerHTML = state.wish.length
+? state.wish.map(function (w) {
+var armed = ui.confirm === 'w' + w.id;
+return '<article class="look"><div class="look-head"><div><h3>' + esc(w.q) + '</h3></div>' +
+'<button class="btn small' + (armed ? ' danger' : '') + '" type="button" data-delwish="' + w.id + '">' + (armed ? 'Confirmer' : 'Supprimer') + '</button></div>' +
+'<div class="tags">' + SITES.slice(0, 4).map(function (s) { return '<a class="tag pink" href="' + esc(shopUrl(s, w.q)) + '" target="_blank" rel="noopener noreferrer">' + esc(s.n) + '</a>'; }).join('') + '</div></article>';
+}).join('')
+: '<div class="empty"><strong>Aucune envie pour l\'instant</strong>Cherche une pièce puis touche « Ajouter à mes envies » pour la retrouver ici.</div>';
+}
+$('shop-form').addEventListener('submit', function (e) {
+e.preventDefault();
+var q = shopQuery();
+if (!q) { toast('Écris ce que tu cherches.'); return; }
+ui.shopq = q; renderShopLinks(q);
+});
+$('shop-wish').addEventListener('click', function () {
+var q = shopQuery();
+if (!q) { toast('Écris ce que tu cherches.'); return; }
+if (state.wish.some(function (w) { return w.q === q; })) { toast('Déjà dans tes envies.'); return; }
+state.wish.unshift({ id: String(Date.now()), q: q });
+if (save()) toast('Ajouté à tes envies.'); else state.wish.shift();
+ui.shopq = q; renderShop();
+});
+document.addEventListener('click', function (e) {
+var i = e.target.closest('[data-sidea]');
+if (i) { $('shop-q').value = i.getAttribute('data-sidea'); ui.shopq = shopQuery(); renderShopLinks(ui.shopq); $('shop-links').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); return; }
+var d = e.target.closest('[data-delwish]');
+if (d) {
+var id = d.getAttribute('data-delwish');
+if (ui.confirm !== 'w' + id) { ui.confirm = 'w' + id; renderShop(); return; }
+ui.confirm = null;
+state.wish = state.wish.filter(function (w) { return w.id !== id; });
+save(); renderShop();
+}
+});
+
+/* ---------- Looks ---------- */
   function renderLooks() {
     var picker = $('look-picker');
     picker.innerHTML = state.wardrobe.length
@@ -590,7 +664,7 @@
   });
 
   /* ---------- Démarrage ---------- */
-  function renderAll() { renderIdeas(); renderGen(); renderOutfits(); renderFavs(); renderWardrobe(); renderLooks(); }
+  function renderAll() { renderIdeas(); renderGen(); renderOutfits(); renderFavs(); renderWardrobe(); renderLooks(); renderShop(); }
   function init() {
     load();
     $('piece-cat').innerHTML = CATS.map(function (c) { return '<option>' + esc(c) + '</option>'; }).join('');

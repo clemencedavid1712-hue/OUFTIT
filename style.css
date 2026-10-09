@@ -277,3 +277,12 @@ input[type="file"] { width: 100%; font-size: 0.85rem; }
 @media (prefers-reduced-motion: no-preference) {
   .heart, .chip, .piece, .btn, .tab { transition: background-color 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s; }
 }
+
+/* Shopping */
+.shoplinks { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.7rem; margin: 0 0 0.5rem; }
+.shoplink { display: block; text-decoration: none; background: var(--card); border: 2px solid var(--peach-2); border-radius: 20px; padding: 0.8rem 1rem; color: var(--ink); }
+.shoplink:hover, .shoplink:focus-visible { border-color: var(--orange); }
+.shoplink strong { display: block; font-family: var(--display); font-weight: 400; text-transform: uppercase; color: var(--orange); font-size: 0.95rem; }
+.shoplink span { font-size: 0.72rem; color: var(--muted); }
+.shopq { font-size: 0.9rem; margin: 0 0 0.7rem; color: var(--muted); }
+.shopq b { color: var(--ink); }

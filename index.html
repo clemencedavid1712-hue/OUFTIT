@@ -52,6 +52,7 @@
       <button class="tab" role="tab" id="t-generator" aria-controls="p-generator" aria-selected="false" data-tab="generator">Générateur</button>
     <button class="tab" role="tab" id="t-outfits" aria-controls="p-outfits" aria-selected="false" data-tab="outfits">Mes tenues</button>
     <button class="tab" role="tab" id="t-wardrobe" aria-controls="p-wardrobe" aria-selected="false" data-tab="wardrobe">Ma garde-robe</button>
+      <button class="tab" role="tab" id="t-shop" aria-controls="p-shop" aria-selected="false" data-tab="shop">Shopping</button>
       <button class="tab" role="tab" id="t-looks" aria-controls="p-looks" aria-selected="false" data-tab="looks">Mes looks</button>
       <button class="tab" role="tab" id="t-favs" aria-controls="p-favs" aria-selected="false" data-tab="favs">Favoris</button>
     </nav>
@@ -154,6 +155,30 @@
     </form>
     <div class="chips" id="f-cat" style="margin-bottom:1rem" aria-label="Filtrer par catégorie"></div>
     <div id="wardrobe"></div>
+  </section>
+
+  <!-- SHOPPING -->
+  <section class="panel" id="p-shop" role="tabpanel" aria-labelledby="t-shop" hidden>
+    <h2 class="section-title">Shopping</h2>
+    <p class="sub">Cherche une pièce que tu n'as pas encore. Ouftit ouvre la recherche sur Vinted et sur d'autres sites, tu compares et tu achètes là-bas.</p>
+    <form class="add-form" id="shop-form">
+      <h3>Que cherches-tu ?</h3>
+      <div class="row">
+        <input type="search" id="shop-q" placeholder="Ex. jean droit gris, baskets blanches, robe noire" maxlength="80" aria-label="Recherche">
+        <select id="shop-size" aria-label="Taille"></select>
+      </div>
+      <div class="chips" id="shop-kind" aria-label="Type de site"></div>
+      <div class="actions">
+        <button class="btn primary" type="submit">Chercher</button>
+        <button class="btn pink" type="button" id="shop-wish">Ajouter à mes envies</button>
+      </div>
+    </form>
+    <div id="shop-links"></div>
+    <h3 class="subhead">Idées de recherche</h3>
+    <p class="hint" style="margin-bottom:.6rem">Des pièces qui manquent à ta garde-robe ou vues dans tes inspirations. Touche-en une pour la chercher.</p>
+    <div class="chips" id="shop-ideas"></div>
+    <h3 class="subhead">Mes envies</h3>
+    <div class="looks" id="shop-wishes"></div>
   </section>
 
   <!-- LOOKS -->
